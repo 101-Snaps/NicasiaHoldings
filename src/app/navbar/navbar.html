@@ -1,0 +1,30 @@
+<!-- navbar.html -->
+<nav class="navbar">
+  <!-- FIX Bug 7: Brand name updated to Nicasia Holdings (was CyberIntel) -->
+  <a routerLink="/" class="navbar-brand">
+    <span>Nicasia Holdings</span>
+  </a>
+
+  <div class="navbar-links">
+    <a routerLink="/about"     routerLinkActive="active">About</a>
+    <a routerLink="/contact"   routerLinkActive="active">Contact</a>
+
+    <ng-container *ngIf="isLoggedIn">
+      <a routerLink="/dashboard" routerLinkActive="active" *ngIf="userRole === 'USER'">Dashboard</a>
+      <a routerLink="/admin"     routerLinkActive="active" *ngIf="userRole === 'STAFF' || userRole === 'ADMIN'">Admin Panel</a>
+    </ng-container>
+  </div>
+
+  <div class="navbar-auth">
+    <ng-container *ngIf="!isLoggedIn">
+      <a routerLink="/login"  class="btn-outline">Login</a>
+      <a routerLink="/signup" class="btn-solid">Sign up</a>
+    </ng-container>
+
+    <ng-container *ngIf="isLoggedIn">
+      <span class="user-name">{{ userName }}</span>
+      <span class="user-role">{{ userRole }}</span>
+      <button class="btn-outline" (click)="onLogout()">Logout</button>
+    </ng-container>
+  </div>
+</nav>

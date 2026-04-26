@@ -1,0 +1,466 @@
+/* ============================= */
+/* MAIN ABOUT SECTION */
+/* ============================= */
+:host {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  padding: 120px 80px;
+  color: white;
+  background: linear-gradient(-45deg, #05070d, #0a0f2c, #121a40, #05070d);
+  background-size: 400% 400%;
+  animation: gradientMove 12s ease infinite;
+}
+
+:host > * {
+  position: relative;
+  z-index: 1;
+}
+
+:host::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(40px);
+  z-index: 0;
+}
+
+:host::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 40%, #5f6fff22, transparent 60%),
+              radial-gradient(circle at 70% 60%, #5f6fff11, transparent 60%);
+  animation: driftClouds 25s linear infinite;
+  z-index: 0;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes driftClouds {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100px); }
+}
+
+/* ============================= */
+/* HERO SECTION */
+/* ============================= */
+.about-hero {
+  text-align: center;
+  margin-top: 5px;
+}
+
+.about-hero h1 {
+  font-size: 60px;
+  font-weight: 700;
+}
+
+.about-hero p {
+  margin-top: 10px;
+  opacity: 0.7;
+}
+
+/* ============================= */
+/* STATS SECTION */
+/* ============================= */
+.stats {
+  display: flex;
+  justify-content: space-around;
+  margin: 60px 0;
+  text-align: center;
+}
+
+.stat h2 {
+  font-size: 40px;
+  color: #5f6fff;
+}
+
+.stat p {
+  opacity: 0.7;
+}
+
+/* ============================= */
+/* CONTENT GRID */
+/* ============================= */
+.about-content {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-bottom: 80px;
+}
+
+/* ============================= */
+/* SERVICES SHOWCASE SECTION */
+/* ============================= */
+.services-showcase {
+  margin: 80px 0;
+  text-align: center;
+}
+
+.services-showcase h2 {
+  font-size: 40px;
+  margin-bottom: 15px;
+}
+
+.services-showcase .tagline {
+  opacity: 0.8;
+  margin-bottom: 40px;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+}
+
+/* ============================= */
+/* BENEFITS SECTION */
+/* ============================= */
+.benefits-section {
+  margin: 80px 0;
+  text-align: center;
+}
+
+.benefits-section h2 {
+  font-size: 40px;
+  margin-bottom: 15px;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.benefit-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 30px;
+  text-align: left;
+  transition: 0.3s;
+}
+
+.benefit-card:hover {
+  transform: translateY(-8px);
+  border-color: #5f6fff;
+}
+
+.benefit-card h3 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #5f6fff;
+}
+
+.benefit-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.benefit-card ul li {
+  padding: 8px 0;
+  opacity: 0.8;
+}
+
+/* ============================= */
+/* PARTNER CTA SECTION */
+/* ============================= */
+.partner-cta {
+  text-align: center;
+  margin: 80px 0 40px;
+  padding: 60px;
+  background: rgba(95, 111, 255, 0.1);
+  border-radius: 30px;
+  border: 1px solid rgba(95, 111, 255, 0.3);
+}
+
+.partner-cta h2 {
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.btn {
+  padding: 15px 35px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.btn-gold {
+  background: #5f6fff;
+  color: white;
+}
+
+.btn-gold:hover {
+  background: #4a5ad9;
+  transform: translateY(-3px);
+}
+
+.btn-dark {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-dark:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-3px);
+}
+
+/* ============================= */
+/* CARD COMPONENT */
+/* ============================= */
+.card {
+  position: relative;
+  overflow: hidden;
+  padding: 30px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: 0.3s;
+}
+
+.card h2 {
+  margin-bottom: 15px;
+  font-size: 22px;
+}
+
+.card p {
+  opacity: 0.7;
+  line-height: 1.6;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, #5f6fff33, transparent 70%);
+  top: -50%;
+  left: -50%;
+  opacity: 0;
+  transition: 0.5s;
+}
+
+.card:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: #5f6fff;
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+/* ============================= */
+/* WHY SECTION */
+/* ============================= */
+.why {
+  margin-top: 80px;
+  text-align: center;
+}
+
+.why h2 {
+  font-size: 40px;
+  margin-bottom: 30px;
+}
+
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+/* ============================= */
+/* BACKGROUND ANIMATIONS */
+/* ============================= */
+.bg-animation {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.bg-animation span {
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  background: #5f6fff;
+  opacity: 0.12;
+  filter: blur(120px);
+  border-radius: 50%;
+  animation: float 18s infinite ease-in-out;
+}
+
+.bg-animation span:nth-child(1) {
+  top: 10%;
+  left: 15%;
+}
+
+.bg-animation span:nth-child(2) {
+  top: 65%;
+  left: 70%;
+  animation-delay: 6s;
+}
+
+.bg-animation span:nth-child(3) {
+  top: 30%;
+  left: 50%;
+  animation-delay: 12s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -30px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+}
+
+.jellyfish-lines {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.jellyfish-lines path {
+  fill: none;
+  stroke: #5f6fff;
+  stroke-width: 2;
+  opacity: 0.12;
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 1200;
+  animation: flowLines 14s linear infinite;
+}
+
+.jellyfish-lines path:nth-child(2) {
+  animation-delay: 4s;
+  opacity: 0.1;
+}
+
+@keyframes flowLines {
+  0% {
+    stroke-dashoffset: 1200;
+    transform: translateY(0) scaleX(1);
+  }
+  50% {
+    stroke-dashoffset: 0;
+    transform: translateY(-30px) scaleX(1.05);
+  }
+  100% {
+    stroke-dashoffset: -1200;
+    transform: translateY(0) scaleX(1);
+  }
+}
+
+.bubbles span {
+  position: absolute;
+  bottom: -50px;
+  width: 10px;
+  height: 10px;
+  background: #5f6fff;
+  border-radius: 50%;
+  opacity: 0.2;
+  animation: rise 12s infinite ease-in;
+}
+
+.bubbles span:nth-child(1) { left: 10%; animation-duration: 10s; }
+.bubbles span:nth-child(2) { left: 25%; animation-duration: 14s; }
+.bubbles span:nth-child(3) { left: 50%; animation-duration: 12s; }
+.bubbles span:nth-child(4) { left: 70%; animation-duration: 16s; }
+.bubbles span:nth-child(5) { left: 85%; animation-duration: 11s; }
+
+@keyframes rise {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.2;
+  }
+  100% {
+    transform: translateY(-900px) scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* ============================= */
+/* FADE IN ANIMATIONS */
+/* ============================= */
+.fade-in {
+  animation: fadeIn 1s ease forwards;
+}
+
+.delay {
+  animation-delay: 0.5s;
+  opacity: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================= */
+/* RESPONSIVE DESIGN */
+/* ============================= */
+@media (max-width: 900px) {
+  :host {
+    padding: 80px 20px;
+  }
+
+  .about-content,
+  .why-grid,
+  .services-grid,
+  .benefits-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .about-hero h1 {
+    font-size: 40px;
+  }
+
+  .partner-cta {
+    padding: 30px 20px;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+    gap: 15px;
+  }
+}

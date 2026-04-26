@@ -1,0 +1,172 @@
+<section class="contact-page">
+  
+  <!-- Background Animation -->
+  <div class="bg-animation">
+    <span></span>
+    <span></span>
+    <span></span>
+    <svg class="jellyfish-lines" viewBox="0 0 1440 800" preserveAspectRatio="none">
+      <path d="M0,400 C300,300 600,500 900,400 C1200,300 1440,450 1440,450" />
+      <path d="M0,500 C400,600 800,300 1200,500 C1400,600 1440,550 1440,550" />
+    </svg>
+    <div class="bubbles">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <!-- Contact Header -->
+  <div class="contact-header">
+    <h2>Contact Us</h2>
+    <p class="tagline">Let's start a conversation about your future</p>
+  </div>
+
+  <!-- Contact Section -->
+  <div class="contact-section">
+    
+    <!-- LEFT: Form -->
+    <div class="contact-form-side">
+      <h2 class="contact-heading">Send Us a <span>Message</span></h2>
+      <p class="contact-subtext">
+        Have questions about our services or opportunities? Fill out the form below and
+        we'll get back to you as soon as possible.
+      </p>
+
+      <form (ngSubmit)="onSubmit($event)" #contactForm="ngForm">
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input 
+            type="text" 
+            class="form-input" 
+            placeholder="Enter your full name" 
+            [(ngModel)]="formData.name"
+            name="name"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email Address *</label>
+          <input 
+            type="email" 
+            class="form-input" 
+            placeholder="your.email@example.com" 
+            [(ngModel)]="formData.email"
+            name="email"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Message *</label>
+          <textarea 
+            class="form-textarea" 
+            placeholder="Tell us how we can help you..." 
+            [(ngModel)]="formData.message"
+            name="message"
+            required></textarea>
+        </div>
+
+        <!-- Success Message -->
+        <div class="success-message" *ngIf="messageSent">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          Message sent successfully! We'll get back to you soon.
+        </div>
+
+        <!-- Error Message -->
+        <div class="error-message" *ngIf="errorMessage">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          {{ errorMessage }}
+        </div>
+
+        <button type="submit" class="send-btn" [disabled]="isSending">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+          {{ isSending ? 'Sending...' : 'Send Message' }}
+        </button>
+      </form>
+    </div>
+
+    <!-- RIGHT: Contact Info -->
+    <div class="contact-info-side">
+      <h2 class="contact-heading">Get in <span>Touch</span></h2>
+      <p class="contact-subtext">
+        We're here to help and answer any questions you might have. We look forward to
+        hearing from you.
+      </p>
+
+      <!-- Email -->
+      <div class="info-card">
+        <div class="info-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+        </div>
+        <div>
+          <div class="info-card-title">Email</div>
+          <div class="info-card-value">Primrose.mathe&#64;nicasiaholdings.co.za</div>
+          <div class="info-card-sub">We'll respond within 24 hours</div>
+        </div>
+      </div>
+
+      <!-- Location -->
+      <div class="info-card">
+        <div class="info-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+        </div>
+        <div>
+          <div class="info-card-title">Location</div>
+          <div class="info-card-value">South Africa</div>
+          <div class="info-card-sub">Serving clients nationwide</div>
+        </div>
+      </div>
+
+      <!-- Social -->
+      <div class="connect-title">Connect With Us</div>
+      <div class="social-links">
+        <a href="https://www.facebook.com/NicasiaHoldings" target="_blank" class="social-btn" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+          </svg>
+        </a>
+
+        <a href="https://www.linkedin.com/in/primrose-mathe-4b143820" target="_blank" class="social-btn" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+            <rect x="2" y="9" width="4" height="12"/>
+            <circle cx="4" cy="4" r="2"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Privacy Section -->
+  <div class="privacy-banner">
+    <div class="privacy-inner">
+      <div class="privacy-title">
+        <span>🔒</span> Your Privacy Matters
+      </div>
+      <p class="privacy-text">
+        Nicasia Holdings is committed to protecting your personal information in accordance with the
+        Protection of Personal Information Act (POPI Act). All information you provide will be handled
+        with the utmost care and confidentiality.
+      </p>
+      <p class="privacy-text">
+        We will only use your contact details to respond to your inquiry and will never share your
+        information with third parties without your explicit consent.
+      </p>
+    </div>
+  </div>
+
+</section>

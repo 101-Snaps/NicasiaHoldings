@@ -1,0 +1,113 @@
+/* navbar.css */
+
+.navbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  box-sizing: border-box;
+  background: #05050a;
+  z-index: 1000;
+  position: relative;
+}
+
+/* BRAND / LOGO */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 2px;
+  color: white;
+}
+
+.navbar-brand span {
+  color: white;
+}
+
+/* NAV LINKS */
+.navbar-links {
+  display: flex;
+  gap: 25px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+
+.navbar-links a {
+  color: white;
+  text-decoration: none;
+  font-size: 13px;
+  opacity: 0.8;
+  transition: opacity 0.15s;
+}
+
+.navbar-links a:hover,
+.navbar-links a.active {
+  opacity: 1;
+}
+
+/* AUTH AREA */
+.navbar-auth {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Outline button (Login / Logout) */
+.navbar-auth .btn-outline {
+  padding: 9px 18px;
+  border-radius: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: transparent;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.navbar-auth .btn-outline:hover {
+  border-color: white;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Solid button (Sign up) */
+.navbar-auth .btn-solid {
+  padding: 9px 18px;
+  border-radius: 25px;
+  background: linear-gradient(45deg, #5f6fff, #8a6bff);
+  border: none;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.navbar-auth .btn-solid:hover {
+  opacity: 0.88;
+}
+
+/* Logged-in state */
+.navbar-auth .user-name {
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.navbar-auth .user-role {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}

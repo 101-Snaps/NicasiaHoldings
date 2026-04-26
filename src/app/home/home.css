@@ -1,0 +1,263 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+  font-family: Arial, sans-serif;
+}
+
+.hero {
+  height: 88vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 60px;
+  padding-top: 50px;
+  background: #05070d;
+  color: white;
+  overflow: hidden;
+  position: relative;
+}
+
+/* LEFT SIDE */
+.left {
+  position: relative;
+  overflow: hidden;
+  padding: 60px;
+  z-index: 5; /* ensure above background layers */
+}
+
+.left h1 {
+  font-size: 64px;
+  font-weight: 700;
+}
+
+.search {
+  margin-top: 20px;
+  width: 300px;
+  padding: 12px 16px;
+  border-radius: 40px;
+  border: 1px solid rgba(255,255,255,0.3);
+  display: flex;
+  justify-content: space-between;
+}
+
+.actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 15px;
+  position: relative;
+  z-index: 10; /* ensure buttons are clickable */
+}
+
+/* BUTTONS */
+.actions a {
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.primary {
+  background: #00bcd4;
+  padding: 12px 25px;
+  border-radius: 25px;
+  color: white;
+}
+
+.secondary {
+  border: 1px solid white;
+  padding: 12px 25px;
+  border-radius: 25px;
+  color: white;
+}
+
+/* Ensure content stays above effects */
+.left > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* === Background image === */
+.bg-image {
+  position: absolute;
+  inset: 0;
+  background: url('/assets/background.png') center/cover no-repeat;
+  opacity: 0;
+  animation: fadeInBg 2s ease forwards, slowZoom 25s linear infinite;
+  z-index: 0;
+}
+
+/* Dark overlay */
+.bg-image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 7, 13, 0.65);
+}
+
+@keyframes fadeInBg {
+  to { opacity: 1; }
+}
+
+@keyframes slowZoom {
+  from { transform: scale(1); }
+  to { transform: scale(1.1); }
+}
+
+/* ANIMATED GRADIENT */
+.bg-animation {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    -45deg,
+    rgba(5,7,13,0.4),
+    rgba(10,15,44,0.3),
+    rgba(18,26,64,0.3),
+    rgba(5,7,13,0.4)
+  );
+  background-size: 400% 400%;
+  animation: gradientMove 15s ease infinite;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* JELLYFISH LINES */
+.jellyfish-lines {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.jellyfish-lines path {
+  fill: none;
+  stroke: #5f6fff;
+  stroke-width: 2;
+  opacity: 0.12;
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 1200;
+  animation: flowLines 14s linear infinite;
+}
+
+@keyframes flowLines {
+  0% { stroke-dashoffset: 1200; transform: translateY(0); }
+  50% { stroke-dashoffset: 0; transform: translateY(-30px); }
+  100% { stroke-dashoffset: -1200; transform: translateY(0); }
+}
+
+/* BUBBLES */
+.bubbles span {
+  position: absolute;
+  bottom: -50px;
+  width: 10px;
+  height: 10px;
+  background: #5f6fff;
+  border-radius: 50%;
+  opacity: 0.2;
+  animation: rise 12s infinite ease-in;
+}
+
+.bubbles span:nth-child(1) { left: 10%; animation-duration: 10s; }
+.bubbles span:nth-child(2) { left: 25%; animation-duration: 14s; }
+.bubbles span:nth-child(3) { left: 50%; animation-duration: 12s; }
+.bubbles span:nth-child(4) { left: 70%; animation-duration: 16s; }
+.bubbles span:nth-child(5) { left: 85%; animation-duration: 11s; }
+
+@keyframes rise {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  30% { opacity: 0.2; }
+  100% { transform: translateY(-900px) scale(1.5); opacity: 0; }
+}
+
+/* RIGHT SIDE */
+.right {
+  position: relative;
+  width: 500px;
+  max-width: 75%;
+  z-index: 5;
+}
+
+.right h2 {
+  font-size: 32px;
+}
+
+.right p {
+  opacity: 0.6;
+  margin-top: 10px;
+}
+
+/* SVG */
+.svg-wrap {
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 420px;
+  height: 420px;
+  opacity: 0.7;
+}
+
+path {
+  fill: none;
+  stroke: url(#grad);
+  stroke-width: 1.5;
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: draw 6s infinite linear;
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* GLOW */
+.glow {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, #7b6cff55, transparent 70%);
+  filter: blur(80px);
+  animation: float 6s ease-in-out infinite;
+}
+
+.glow:nth-child(1) {
+  top: -50px;
+  right: 0;
+}
+
+.glow:nth-child(2) {
+  bottom: -50px;
+  right: 150px;
+  animation-delay: 2s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-30px);
+  }
+}
+
+/* 🔥 CRITICAL FIX: allow clicks through all visual layers */
+.bg-image,
+.bg-image::after,
+.bg-animation,
+.jellyfish-lines,
+.bubbles,
+.bubbles span,
+.glow {
+  pointer-events: none;
+}

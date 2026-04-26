@@ -1,0 +1,485 @@
+<!-- admin.html -->
+<div class="admin-shell" *ngIf="staffUser">
+
+  <!-- ── Sidebar ─────────────────────────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-icon">🛡️</span>
+      <span class="brand-name">CyberIntel</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button [class.active]="activeTab==='overview'"     (click)="setTab('overview')">📊 Overview</button>
+      <button [class.active]="activeTab==='incidents'"    (click)="setTab('incidents')">🚨 Incidents</button>
+      <button [class.active]="activeTab==='threats'"      (click)="setTab('threats')">☠️ Threats</button>
+      <button [class.active]="activeTab==='ai'"           (click)="setTab('ai')">🤖 AI Predictions</button>
+      <button [class.active]="activeTab==='users'"        (click)="setTab('users')">👥 Users</button>
+      <button [class.active]="activeTab==='applications'" (click)="setTab('applications')">📄 Applications</button>
+      <button [class.active]="activeTab==='logs'"         (click)="setTab('logs')">📋 Audit Logs</button>
+      <button [class.active]="activeTab==='health'"       (click)="setTab('health')">💚 System Health</button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="staff-info">
+        <div class="staff-avatar">{{ staffUser.name?.charAt(0) }}</div>
+        <div>
+          <div class="staff-name">{{ staffUser.name }}</div>
+          <div class="staff-role">{{ staffUser.role }}</div>
+        </div>
+      </div>
+      <button class="btn-logout" (click)="logout()">Sign out</button>
+    </div>
+  </aside>
+
+  <!-- ── Main ────────────────────────────────────────────────────────── -->
+  <main class="admin-main">
+
+    <!-- Header -->
+    <header class="admin-header">
+      <div>
+        <h1>{{ activeTab | titlecase }}</h1>
+        <p class="last-refresh">Last updated: {{ lastRefreshed | date:'HH:mm:ss' }}</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn-alert" (click)="showAlertPanel = !showAlertPanel">
+          🔔 Alerts <span class="badge" *ngIf="unreadAlertCount > 0">{{ unreadAlertCount }}</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Alert panel -->
+    <div class="alert-panel" *ngIf="showAlertPanel">
+      <div class="alert-panel-header">
+        <strong>Security Alerts</strong>
+        <button (click)="showAlertPanel = false">✕</button>
+      </div>
+      <div class="alert-list">
+        <div class="alert-item" *ngFor="let a of alerts" [class.unread]="a.status==='UNREAD'">
+          <div class="alert-meta">
+            <span class="badge" [ngClass]="severityClass(a.severity)">{{ a.severity }}</span>
+            <span class="alert-type">{{ a.type }}</span>
+            <span class="alert-time">{{ a.createdAt | date:'short' }}</span>
+          </div>
+          <p class="alert-msg">{{ a.message }}</p>
+          <button *ngIf="a.status==='UNREAD'" class="btn-sm" (click)="markAlertRead(a.id)">Mark read</button>
+        </div>
+        <p *ngIf="alerts.length === 0" class="empty-msg">No alerts</p>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading-overlay" *ngIf="isLoading">
+      <div class="spinner-big">⟳</div>
+      <p>Loading dashboard…</p>
+    </div>
+
+    <!-- ── OVERVIEW TAB ──────────────────────────────────────────────── -->
+    <section *ngIf="activeTab==='overview'" class="tab-content">
+
+      <!-- Stat cards -->
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-icon">🚨</div>
+          <div class="stat-num">{{ stats.totalIncidents ?? 0 }}</div>
+          <div class="stat-lbl">Total Incidents</div>
+        </div>
+        <div class="stat-card critical">
+          <div class="stat-icon">🔴</div>
+          <div class="stat-num">{{ stats.criticalIncidents ?? 0 }}</div>
+          <div class="stat-lbl">Critical</div>
+        </div>
+        <div class="stat-card warning">
+          <div class="stat-icon">⚠️</div>
+          <div class="stat-num">{{ stats.openIncidents ?? 0 }}</div>
+          <div class="stat-lbl">Open</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">☠️</div>
+          <div class="stat-num">{{ stats.totalThreats ?? 0 }}</div>
+          <div class="stat-lbl">Total Threats</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-num">{{ stats.totalUsers ?? 0 }}</div>
+          <div class="stat-lbl">Users</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📄</div>
+          <div class="stat-num">{{ stats.totalApplications ?? 0 }}</div>
+          <div class="stat-lbl">Applications</div>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="chart-grid">
+        <div class="chart-card">
+          <h3>Incident Severity</h3>
+          <canvas id="severityChart"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Incident Types</h3>
+          <canvas id="typeChart"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Threat Risk Levels</h3>
+          <canvas id="threatRiskChart"></canvas>
+        </div>
+        <div class="chart-card wide">
+          <h3>7-Day Activity</h3>
+          <canvas id="activityChart"></canvas>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ── INCIDENTS TAB ─────────────────────────────────────────────── -->
+    <section *ngIf="activeTab==='incidents'" class="tab-content">
+      <div class="tab-toolbar">
+        <input type="text" [(ngModel)]="incidentSearch" placeholder="Search incidents…" class="search-input" />
+        <button class="btn-primary" (click)="openCreateIncident()">+ New Incident</button>
+      </div>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th><th>Title</th><th>Type</th><th>Severity</th>
+              <th>Status</th><th>Affected System</th><th>Reported By</th><th>Created</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let inc of filteredIncidents">
+              <td>{{ inc.id }}</td>
+              <td class="td-title">{{ inc.title }}</td>
+              <td>{{ inc.type }}</td>
+              <td><span class="badge" [ngClass]="severityClass(inc.severity)">{{ inc.severity }}</span></td>
+              <td><span class="status-pill">{{ inc.status }}</span></td>
+              <td>{{ inc.affectedSystem || '—' }}</td>
+              <td>{{ inc.reportedBy || '—' }}</td>
+              <td>{{ inc.createdAt | date:'dd/MM/yy HH:mm' }}</td>
+              <td class="td-actions">
+                <button class="btn-sm btn-edit" (click)="openEditIncident(inc)">Edit</button>
+                <button class="btn-sm btn-del"  (click)="deleteIncident(inc.id)">Delete</button>
+              </td>
+            </tr>
+            <tr *ngIf="filteredIncidents.length === 0">
+              <td colspan="9" class="empty-msg">No incidents found</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Incident form modal -->
+      <div class="modal-overlay" *ngIf="showIncidentForm" (click)="showIncidentForm=false">
+        <div class="modal" (click)="$event.stopPropagation()" [formGroup]="incidentForm">
+          <div class="modal-header">
+            <h2>{{ editingIncidentId ? 'Edit Incident' : 'New Incident' }}</h2>
+            <button (click)="showIncidentForm=false">✕</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-row">
+              <div class="field" [class.has-error]="incidentForm.get('title')!.invalid && incidentForm.get('title')!.touched">
+                <label>Title *</label>
+                <input type="text" formControlName="title" placeholder="Incident title" />
+                <span class="field-error" *ngIf="incidentForm.get('title')!.invalid && incidentForm.get('title')!.touched">Title required (min 3 chars)</span>
+              </div>
+            </div>
+            <div class="form-row two-col">
+              <div class="field" [class.has-error]="incidentForm.get('severity')!.invalid && incidentForm.get('severity')!.touched">
+                <label>Severity *</label>
+                <select formControlName="severity">
+                  <option value="">Select severity</option>
+                  <option>LOW</option><option>MEDIUM</option><option>HIGH</option><option>CRITICAL</option>
+                </select>
+                <span class="field-error" *ngIf="incidentForm.get('severity')!.invalid && incidentForm.get('severity')!.touched">Required</span>
+              </div>
+              <div class="field" [class.has-error]="incidentForm.get('type')!.invalid && incidentForm.get('type')!.touched">
+                <label>Type *</label>
+                <select formControlName="type">
+                  <option value="">Select type</option>
+                  <option>Phishing</option><option>Ransomware</option><option>DDoS</option>
+                  <option>Data Breach</option><option>Malware</option><option>Insider Threat</option><option>Other</option>
+                </select>
+                <span class="field-error" *ngIf="incidentForm.get('type')!.invalid && incidentForm.get('type')!.touched">Required</span>
+              </div>
+            </div>
+            <div class="form-row two-col">
+              <div class="field">
+                <label>Status</label>
+                <select formControlName="status">
+                  <option>OPEN</option><option>IN_PROGRESS</option><option>RESOLVED</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Affected System</label>
+                <input type="text" formControlName="affectedSystem" placeholder="e.g. HR Database" />
+              </div>
+            </div>
+            <div class="field">
+              <label>Reported By</label>
+              <input type="text" formControlName="reportedBy" placeholder="Reporter name / email" />
+            </div>
+            <div class="field">
+              <label>Description</label>
+              <textarea formControlName="description" rows="3" placeholder="Describe the incident…"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn-ghost" (click)="showIncidentForm=false">Cancel</button>
+            <button class="btn-primary" (click)="saveIncident()">{{ editingIncidentId ? 'Update' : 'Create' }}</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── THREATS TAB ───────────────────────────────────────────────── -->
+    <section *ngIf="activeTab==='threats'" class="tab-content">
+      <div class="tab-toolbar">
+        <input type="text" [(ngModel)]="threatSearch" placeholder="Search threats…" class="search-input" />
+        <button class="btn-primary" (click)="openCreateThreat()">+ New Threat</button>
+      </div>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th><th>Name</th><th>Category</th><th>Risk Level</th>
+              <th>AI Confidence</th><th>Status</th><th>Source</th><th>Detected</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let t of filteredThreats">
+              <td>{{ t.id }}</td>
+              <td class="td-title">{{ t.name }}</td>
+              <td>{{ t.category }}</td>
+              <td><span class="badge" [ngClass]="severityClass(t.riskLevel)">{{ t.riskLevel }}</span></td>
+              <td>
+                <span *ngIf="t.aiConfidence > 0">{{ (t.aiConfidence * 100).toFixed(0) }}%</span>
+                <span *ngIf="!t.aiConfidence || t.aiConfidence === 0" class="muted">Fallback</span>
+              </td>
+              <td>{{ t.status }}</td>
+              <td>{{ t.source || '—' }}</td>
+              <td>{{ t.detectedAt | date:'dd/MM/yy HH:mm' }}</td>
+              <td class="td-actions">
+                <button class="btn-sm btn-edit" (click)="openEditThreat(t)">Edit</button>
+                <button class="btn-sm btn-del"  (click)="deleteThreat(t.id)">Delete</button>
+              </td>
+            </tr>
+            <tr *ngIf="filteredThreats.length === 0">
+              <td colspan="9" class="empty-msg">No threats found</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Threat form modal -->
+      <div class="modal-overlay" *ngIf="showThreatForm" (click)="showThreatForm=false">
+        <div class="modal" (click)="$event.stopPropagation()" [formGroup]="threatForm">
+          <div class="modal-header">
+            <h2>{{ editingThreatId ? 'Edit Threat' : 'New Threat' }}</h2>
+            <button (click)="showThreatForm=false">✕</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-row two-col">
+              <div class="field" [class.has-error]="threatForm.get('name')!.invalid && threatForm.get('name')!.touched">
+                <label>Name *</label>
+                <input type="text" formControlName="name" placeholder="Threat name" />
+                <span class="field-error" *ngIf="threatForm.get('name')!.invalid && threatForm.get('name')!.touched">Name required (min 2 chars)</span>
+              </div>
+              <div class="field" [class.has-error]="threatForm.get('category')!.invalid && threatForm.get('category')!.touched">
+                <label>Category *</label>
+                <select formControlName="category">
+                  <option value="">Select category</option>
+                  <option>Ransomware</option><option>Data Breach</option><option>DDoS</option>
+                  <option>Trojan</option><option>Worm</option><option>Spyware</option>
+                  <option>Phishing</option><option>Virus</option><option>Adware</option>
+                </select>
+                <span class="field-error" *ngIf="threatForm.get('category')!.invalid && threatForm.get('category')!.touched">Required</span>
+              </div>
+            </div>
+            <div class="form-row two-col">
+              <div class="field">
+                <label>Status</label>
+                <select formControlName="status">
+                  <option>ACTIVE</option><option>CONTAINED</option><option>ELIMINATED</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Source</label>
+                <select formControlName="source">
+                  <option value="">Unknown</option>
+                  <option>External</option><option>Internal</option><option>Vendor</option><option>Unknown</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label>Description</label>
+              <textarea formControlName="description" rows="3" placeholder="Threat description…"></textarea>
+            </div>
+            <div class="ai-note">
+              🤖 <strong>AI will automatically predict the risk level</strong> based on category, source and frequency.
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn-ghost" (click)="showThreatForm=false">Cancel</button>
+            <button class="btn-primary" (click)="saveThreat()">{{ editingThreatId ? 'Update' : 'Create' }}</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── AI PREDICTIONS TAB ────────────────────────────────────────── -->
+    <section *ngIf="activeTab==='ai'" class="tab-content">
+      <div class="tab-toolbar">
+        <h2>AI Risk Predictions <span class="ai-badge">PyTorch</span></h2>
+        <button class="btn-ghost" (click)="loadAiPredictions()">↻ Refresh</button>
+      </div>
+
+      <div class="ai-grid" *ngIf="aiPredictions.length > 0">
+        <div class="ai-card" *ngFor="let p of aiPredictions">
+          <div class="ai-card-header">
+            <span class="badge" [ngClass]="severityClass(p.predictedSeverity)">{{ p.predictedSeverity }}</span>
+            <span class="ai-confidence">{{ (p.confidence * 100).toFixed(0) }}% confidence</span>
+          </div>
+          <h4>{{ p.title }}</h4>
+          <div class="risk-bar-wrap">
+            <div class="risk-bar" [style.width.%]="p.riskScore"
+                 [class.bar-low]="p.riskScore < 40"
+                 [class.bar-med]="p.riskScore >= 40 && p.riskScore < 70"
+                 [class.bar-high]="p.riskScore >= 70"></div>
+            <span class="risk-score">{{ p.riskScore }}</span>
+          </div>
+          <p class="ai-recommendation">💡 {{ p.recommendation }}</p>
+          <div class="severity-match" *ngIf="!p.severityMatch">
+            ⚠️ AI prediction differs from recorded severity
+          </div>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="aiPredictions.length === 0">
+        <p>🤖 No predictions available. Make sure the AI service is running on port 5000.</p>
+        <button class="btn-primary" (click)="loadAiPredictions()">Retry</button>
+      </div>
+    </section>
+
+    <!-- ── USERS TAB ─────────────────────────────────────────────────── -->
+    <section *ngIf="activeTab==='users'" class="tab-content">
+      <div class="tab-toolbar">
+        <input type="text" [(ngModel)]="userSearch" placeholder="Search users…" class="search-input" />
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th><th>Logins</th><th>Last Login</th><th>Joined</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let u of filteredUsers">
+              <td>{{ u.id }}</td>
+              <td>{{ u.name }} {{ u.surname }}</td>
+              <td>{{ u.email }}</td>
+              <td><span class="role-pill" [class.role-staff]="u.role!=='USER'">{{ u.role }}</span></td>
+              <td>{{ u.loginCount }}</td>
+              <td>{{ u.lastLogin !== 'Never' ? (u.lastLogin | date:'dd/MM/yy') : 'Never' }}</td>
+              <td>{{ u.createdAt | date:'dd/MM/yy' }}</td>
+              <td>
+                <button class="btn-sm btn-del" (click)="deleteUser(u.id)"
+                        [disabled]="u.email === staffUser?.email">Delete</button>
+              </td>
+            </tr>
+            <tr *ngIf="filteredUsers.length === 0">
+              <td colspan="8" class="empty-msg">No users found</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── APPLICATIONS TAB ──────────────────────────────────────────── -->
+    <section *ngIf="activeTab==='applications'" class="tab-content">
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr><th>ID</th><th>Full Name</th><th>Email</th><th>Phone</th><th>Job Title</th><th>Company</th><th>Nationality</th><th>Submitted</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let a of applications">
+              <td>{{ a.id }}</td>
+              <td>{{ a.fullName }}</td>
+              <td>{{ a.email }}</td>
+              <td>{{ a.phone }}</td>
+              <td>{{ a.jobTitle }}</td>
+              <td>{{ a.jobCompany }}</td>
+              <td>{{ a.nationality }}</td>
+              <td>{{ a.submittedAt | date:'dd/MM/yy HH:mm' }}</td>
+            </tr>
+            <tr *ngIf="applications.length === 0">
+              <td colspan="8" class="empty-msg">No applications yet</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── LOGS TAB ──────────────────────────────────────────────────── -->
+    <section *ngIf="activeTab==='logs'" class="tab-content">
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr><th>Time</th><th>User</th><th>Action</th><th>Endpoint</th><th>Result</th><th>IP</th><th>Details</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let l of logs">
+              <td>{{ l.timestamp | date:'dd/MM HH:mm:ss' }}</td>
+              <td>{{ l.userEmail }}</td>
+              <td>{{ l.action }}</td>
+              <td class="td-endpoint">{{ l.endpoint }}</td>
+              <td><span class="result-pill" [class.result-fail]="l.result==='FAILED'">{{ l.result }}</span></td>
+              <td>{{ l.ipAddress }}</td>
+              <td class="td-details">{{ l.details }}</td>
+            </tr>
+            <tr *ngIf="logs.length === 0">
+              <td colspan="7" class="empty-msg">No audit logs</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── HEALTH TAB ────────────────────────────────────────────────── -->
+    <section *ngIf="activeTab==='health'" class="tab-content">
+      <div class="health-grid" *ngIf="systemHealth.status">
+        <div class="health-card">
+          <div class="health-icon">💚</div>
+          <div class="health-label">Status</div>
+          <div class="health-value green">{{ systemHealth.status }}</div>
+        </div>
+        <div class="health-card">
+          <div class="health-icon">⏱️</div>
+          <div class="health-label">Uptime</div>
+          <div class="health-value">{{ systemHealth.uptimeMinutes }} min</div>
+        </div>
+        <div class="health-card">
+          <div class="health-icon">🧠</div>
+          <div class="health-label">Memory Used</div>
+          <div class="health-value">{{ systemHealth.memoryUsedMB }} MB ({{ systemHealth.memoryUsedPct }}%)</div>
+        </div>
+        <div class="health-card">
+          <div class="health-icon">🖥️</div>
+          <div class="health-label">CPUs</div>
+          <div class="health-value">{{ systemHealth.availableProcessors }}</div>
+        </div>
+        <div class="health-card">
+          <div class="health-icon">🗄️</div>
+          <div class="health-label">DB Incidents</div>
+          <div class="health-value">{{ systemHealth.dbIncidents }}</div>
+        </div>
+        <div class="health-card">
+          <div class="health-icon">☠️</div>
+          <div class="health-label">DB Threats</div>
+          <div class="health-value">{{ systemHealth.dbThreats }}</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>

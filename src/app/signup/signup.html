@@ -1,0 +1,91 @@
+<section class="auth" #signupSection>
+
+  <!-- BACKGROUND -->
+  <div class="bg-layer">
+    <div class="bg-image"></div>
+    <div class="bg-animation">
+      <span></span>
+      <span></span>
+      <span></span>
+
+      <svg class="jellyfish-lines" viewBox="0 0 1440 800" preserveAspectRatio="none">
+        <path d="M0,400 C300,300 600,500 900,400 C1200,300 1440,450 1440,450" />
+        <path d="M0,500 C400,600 800,300 1200,500 C1400,600 1440,550 1440,550" />
+      </svg>
+
+      <div class="bubbles">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="auth-container">
+
+    <!-- LEFT -->
+    <div class="left">
+      <div class="left-content">
+        <!-- FIX: Branding updated to match recruitment agency purpose -->
+        <h1>Join Nicasia Holdings</h1>
+        <p>Create your applicant account and start applying for opportunities</p>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right">
+
+      <div class="glow"></div>
+      <div class="glow"></div>
+
+      <div class="form-card">
+        <h2>Create Account</h2>
+
+        <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+
+          <input type="text" placeholder="First Name" formControlName="name">
+          <small *ngIf="signupForm.get('name')?.invalid && signupForm.get('name')?.touched">
+            Name is required (min 2 characters)
+          </small>
+
+          <input type="text" placeholder="Last Name" formControlName="surname">
+          <small *ngIf="signupForm.get('surname')?.invalid && signupForm.get('surname')?.touched">
+            Surname is required
+          </small>
+
+          <input type="text" placeholder="Cell Number (e.g. 0821234567)" formControlName="cell">
+          <small *ngIf="signupForm.get('cell')?.invalid && signupForm.get('cell')?.touched">
+            Enter a valid 10-digit phone number
+          </small>
+
+          <input type="email" placeholder="Email Address" formControlName="email">
+          <small *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched">
+            Enter a valid email address
+          </small>
+
+          <input type="password" placeholder="Password (min 6 characters)" formControlName="password">
+          <small *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched">
+            Password must be at least 6 characters
+          </small>
+
+          <button type="submit" [disabled]="signupForm.invalid">
+            Create Account
+          </button>
+
+          <p>
+            Already have an account?
+            <a routerLink="/login">Sign in</a>
+          </p>
+
+          <p>
+            Registering as staff?
+            <a routerLink="/staff-signup">Staff registration</a>
+          </p>
+
+        </form>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>

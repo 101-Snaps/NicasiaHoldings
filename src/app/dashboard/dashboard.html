@@ -1,0 +1,168 @@
+<section class="dashboard" #dashboardSection>
+
+  <!-- BACKGROUND (same as home) -->
+  <div class="bg-image"></div>
+
+  <div class="bg-animation">
+    <span></span>
+    <span></span>
+    <span></span>
+
+    <svg class="jellyfish-lines" viewBox="0 0 1440 800" preserveAspectRatio="none">
+      <path d="M0,400 C300,300 600,500 900,400 C1200,300 1440,450 1440,450" />
+      <path d="M0,500 C400,600 800,300 1200,500 C1400,600 1440,550 1440,550" />
+    </svg>
+
+    <div class="bubbles">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>{{ getGreeting() }}, {{ userName }} </h1>
+    <p>Your next opportunity is waiting.</p>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-bar">
+    <input 
+      type="text" 
+      placeholder="Search for jobs..."
+      [(ngModel)]="searchTerm"
+    />
+  </div>
+
+ <!-- STATS -->
+<div class="stats">
+  
+  <!-- Applications -->
+  <div class="card">
+    <h2 *ngIf="appCount !== null; else appLoading">
+      {{ appCount }}
+    </h2>
+    <ng-template #appLoading>
+      <span>-</span>
+    </ng-template>
+    <p>Applications</p>
+  </div>
+
+  <!-- Saved Jobs -->
+  <div class="card">
+    <h2 *ngIf="savedCount !== null; else savedComing">
+      {{ savedCount }}
+    </h2>
+    <ng-template #savedComing>
+      <span>—</span>
+    </ng-template>
+    <p>Saved Jobs </p>
+  </div>
+
+  <!-- Profile Completion -->
+  <div class="card">
+    <h2 *ngIf="profileCompletion !== null; else profileComing">
+      {{ profileCompletion }}%
+    </h2>
+    <ng-template #profileComing>
+      <span>—</span>
+    </ng-template>
+    <p>Profile Completion</p>
+  </div>
+
+</div>
+  <!-- VACANCIES SECTION - ADDED FROM VACANCIES PAGE -->
+  <div class="vacancies-section">
+    <div class="vacancies-header">
+      <h2>Current Vacancies</h2>
+      <p>Discover opportunities that align with your career aspirations</p>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <button class="filter-btn active" (click)="filterVacancies('All')">All</button>
+      <button class="filter-btn" (click)="filterVacancies('Learnership')">Learnership</button>
+      <button class="filter-btn" (click)="filterVacancies('Graduate Programme')">Graduate Programme</button>
+    </div>
+
+    <p class="vacancy-count">Showing {{ filteredVacancies().length }} opportunities</p>
+
+    <!-- Vacancies Grid -->
+    <div class="vacancies-grid">
+      <div class="vacancy-card" *ngFor="let job of filteredVacancies()">
+        <div class="card-top">
+          <div class="card-title">{{ job.title }}</div>
+          <span class="card-badge">{{ job.type }}</span>
+        </div>
+        <div class="card-company">{{ job.company }}</div>
+        <p class="card-desc">{{ job.description }}</p>
+        
+        <div class="card-meta">
+          <div class="card-meta-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            {{ job.location }}
+          </div>
+          <div class="card-meta-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="1" x2="12" y2="23"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+            {{ job.salary }}
+          </div>
+          <div class="card-meta-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            Deadline: {{ job.deadline }}
+          </div>
+        </div>
+
+        <div class="card-requirements">
+          <div class="req-title">Requirements:</div>
+          <ul class="req-list">
+            <li *ngFor="let req of job.requirements">{{ req }}</li>
+          </ul>
+        </div>
+
+        <button class="apply-btn" (click)="applyForJob(job)">Apply for This Position</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Tips Section -->
+  <section class="application-tips">
+    <h2>Application Tips</h2>
+    <div class="tips-grid">
+      <div class="tip-box">
+        <div class="icon">📄</div>
+        <h3>Prepare Your Documents</h3>
+        <p>Have your CV, ID copy, Matric certificate, and any relevant qualifications ready before applying.</p>
+      </div>
+      <div class="tip-box">
+        <div class="icon">✍️</div>
+        <h3>Write a Strong Motivation</h3>
+        <p>Explain why you're interested in the position and how your skills align with the requirements.</p>
+      </div>
+      <div class="tip-box">
+        <div class="icon">⏰</div>
+        <h3>Apply Early</h3>
+        <p>Don't wait until the deadline. Early applications show enthusiasm and allow time for processing.</p>
+      </div>
+      <div class="tip-box">
+        <div class="icon">📞</div>
+        <h3>Follow Up</h3>
+        <p>If you haven't heard back within 2 weeks, feel free to follow up on your application status.</p>
+      </div>
+    </div>
+  </section>
+
+</section>

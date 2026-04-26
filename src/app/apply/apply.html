@@ -1,0 +1,189 @@
+<!-- apply.html -->
+<div class="apply-page">
+  <div class="apply-header">
+    <h1>Job Application</h1>
+    <div class="job-banner" *ngIf="selectedJob">
+      <div class="job-banner-title">{{ selectedJob.title }}</div>
+      <div class="job-banner-meta">{{ selectedJob.company }} · {{ selectedJob.location }}</div>
+    </div>
+  </div>
+
+  <form [formGroup]="applyForm" (ngSubmit)="onSubmit()" novalidate class="apply-form">
+
+    <!-- ── Personal Details ─────────────────────────────────────────── -->
+    <div class="form-section">
+      <h2>Personal Details</h2>
+      <div class="form-grid two-col">
+
+        <div class="field" [class.has-error]="f('full_name').invalid && f('full_name').touched">
+          <label>Full Name *</label>
+          <input type="text" formControlName="full_name" placeholder="Jane Doe" />
+          <span class="field-error" *ngIf="f('full_name').touched && f('full_name').errors?.['required']">Full name is required</span>
+          <span class="field-error" *ngIf="f('full_name').touched && f('full_name').errors?.['minlength']">At least 3 characters required</span>
+        </div>
+
+        <div class="field" [class.has-error]="f('email').invalid && f('email').touched">
+          <label>Email *</label>
+          <input type="email" formControlName="email" placeholder="you@example.com" />
+          <span class="field-error" *ngIf="f('email').touched && f('email').errors?.['required']">Email is required</span>
+          <span class="field-error" *ngIf="f('email').touched && f('email').errors?.['email']">Valid email required</span>
+        </div>
+
+        <div class="field" [class.has-error]="f('phone').invalid && f('phone').touched">
+          <label>Phone *</label>
+          <input type="tel" formControlName="phone" placeholder="0821234567" />
+          <span class="field-error" *ngIf="f('phone').touched && f('phone').errors?.['required']">Phone is required</span>
+          <span class="field-error" *ngIf="f('phone').touched && f('phone').errors?.['pattern']">Enter 10–15 digits only</span>
+        </div>
+
+        <div class="field" [class.has-error]="f('gender').invalid && f('gender').touched">
+          <label>Gender *</label>
+          <select formControlName="gender">
+            <option value="">Select gender</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Non-binary</option>
+            <option>Prefer not to say</option>
+          </select>
+          <span class="field-error" *ngIf="f('gender').touched && f('gender').errors?.['required']">Please select gender</span>
+        </div>
+
+        <div class="field" [class.has-error]="f('nationality').invalid && f('nationality').touched">
+          <label>Nationality *</label>
+          <input type="text" formControlName="nationality" placeholder="South African" />
+          <span class="field-error" *ngIf="f('nationality').touched && f('nationality').errors?.['required']">Nationality is required</span>
+        </div>
+
+        <div class="field" [class.has-error]="f('id_number').invalid && f('id_number').touched">
+          <label>SA ID Number *</label>
+          <input type="text" formControlName="id_number" placeholder="13-digit ID number" maxlength="13" />
+          <span class="field-error" *ngIf="f('id_number').touched && f('id_number').errors?.['required']">ID number is required</span>
+          <span class="field-error" *ngIf="f('id_number').touched && (f('id_number').errors?.['minlength'] || f('id_number').errors?.['maxlength'])">Must be exactly 13 digits</span>
+          <span class="field-error" *ngIf="f('id_number').touched && f('id_number').errors?.['pattern']">Digits only</span>
+        </div>
+
+      </div>
+
+      <!-- Disability -->
+      <div class="field checkbox-field">
+        <label class="checkbox-label">
+          <input type="checkbox" formControlName="has_disability" />
+          <span>I have a disability</span>
+        </label>
+      </div>
+      <div class="field" *ngIf="f('has_disability').value">
+        <label>Disability details</label>
+        <textarea formControlName="disability_details" rows="2" placeholder="Briefly describe your disability and any accommodations needed"></textarea>
+      </div>
+    </div>
+
+    <!-- ── Education ────────────────────────────────────────────────── -->
+    <div class="form-section">
+      <div class="section-header">
+        <h2>Education</h2>
+        <button type="button" class="btn-add" (click)="addEducation()">+ Add</button>
+      </div>
+
+      <div formArrayName="education">
+        <div class="edu-card" *ngFor="let edu of educationArray.controls; let i = index" [formGroupName]="i">
+          <div class="form-grid three-col">
+
+            <div class="field" [class.has-error]="edu.get('qualification')!.invalid && edu.get('qualification')!.touched">
+              <label>Qualification *</label>
+              <input type="text" formControlName="qualification" placeholder="e.g. Matric, B.Sc" />
+              <span class="field-error" *ngIf="edu.get('qualification')!.touched && edu.get('qualification')!.errors?.['required']">Required</span>
+            </div>
+
+            <div class="field" [class.has-error]="edu.get('institution')!.invalid && edu.get('institution')!.touched">
+              <label>Institution *</label>
+              <input type="text" formControlName="institution" placeholder="School / University" />
+              <span class="field-error" *ngIf="edu.get('institution')!.touched && edu.get('institution')!.errors?.['required']">Required</span>
+            </div>
+
+            <div class="field" [class.has-error]="edu.get('year')!.invalid && edu.get('year')!.touched">
+              <label>Year *</label>
+              <input type="number" formControlName="year" placeholder="2023" min="1950" [max]="2026" />
+              <span class="field-error" *ngIf="edu.get('year')!.touched && edu.get('year')!.errors?.['required']">Required</span>
+              <span class="field-error" *ngIf="edu.get('year')!.touched && (edu.get('year')!.errors?.['min'] || edu.get('year')!.errors?.['max'])">Enter a valid year</span>
+            </div>
+
+          </div>
+          <button type="button" class="btn-remove" (click)="removeEducation(i)" *ngIf="educationArray.length > 1">✕ Remove</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Work Experience ──────────────────────────────────────────── -->
+    <div class="form-section">
+      <div class="section-header">
+        <h2>Work Experience</h2>
+        <button type="button" class="btn-add" (click)="addExperience()">+ Add</button>
+      </div>
+
+      <div formArrayName="experience">
+        <div class="exp-card" *ngFor="let exp of experienceArray.controls; let i = index" [formGroupName]="i">
+          <div class="form-grid two-col">
+
+            <div class="field" [class.has-error]="exp.get('company')!.invalid && exp.get('company')!.touched">
+              <label>Company *</label>
+              <input type="text" formControlName="company" placeholder="Company name" />
+              <span class="field-error" *ngIf="exp.get('company')!.touched && exp.get('company')!.errors?.['required']">Required</span>
+            </div>
+
+            <div class="field" [class.has-error]="exp.get('role')!.invalid && exp.get('role')!.touched">
+              <label>Role / Title *</label>
+              <input type="text" formControlName="role" placeholder="e.g. Junior Developer" />
+              <span class="field-error" *ngIf="exp.get('role')!.touched && exp.get('role')!.errors?.['required']">Required</span>
+            </div>
+
+            <div class="field" [class.has-error]="exp.get('years')!.invalid && exp.get('years')!.touched">
+              <label>Years *</label>
+              <input type="number" formControlName="years" placeholder="2" min="0" max="50" />
+              <span class="field-error" *ngIf="exp.get('years')!.touched && exp.get('years')!.errors?.['required']">Required</span>
+              <span class="field-error" *ngIf="exp.get('years')!.touched && (exp.get('years')!.errors?.['min'] || exp.get('years')!.errors?.['max'])">Enter 0–50 years</span>
+            </div>
+
+            <div class="field">
+              <label>Description</label>
+              <input type="text" formControlName="description" placeholder="Key responsibilities" />
+            </div>
+
+          </div>
+          <button type="button" class="btn-remove" (click)="removeExperience(i)" *ngIf="experienceArray.length > 1">✕ Remove</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Documents ────────────────────────────────────────────────── -->
+    <div class="form-section">
+      <h2>Documents</h2>
+      <div class="form-grid two-col">
+
+        <div class="field" [class.has-error]="cvError">
+          <label>CV (PDF, max 5 MB) *</label>
+          <input type="file" accept=".pdf" (change)="onCvSelected($event)" />
+          <span class="field-success" *ngIf="cvFile">✓ {{ cvFile.name }}</span>
+          <span class="field-error"   *ngIf="cvError">{{ cvError }}</span>
+        </div>
+
+        <div class="field" [class.has-error]="idError">
+          <label>ID Document (PDF, max 5 MB) *</label>
+          <input type="file" accept=".pdf" (change)="onIdSelected($event)" />
+          <span class="field-success" *ngIf="idFile">✓ {{ idFile.name }}</span>
+          <span class="field-error"   *ngIf="idError">{{ idError }}</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Submit ────────────────────────────────────────────────────── -->
+    <div class="form-section submit-section">
+      <div class="alert-error" *ngIf="submitError" role="alert">⚠️ {{ submitError }}</div>
+      <button type="submit" class="btn-submit" [disabled]="isSubmitting">
+        <span *ngIf="!isSubmitting">Submit Application</span>
+        <span *ngIf="isSubmitting">Submitting…</span>
+      </button>
+    </div>
+
+  </form>
+</div>

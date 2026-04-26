@@ -1,0 +1,430 @@
+/* Contact Page Styles - Matching Dashboard/Apply Style */
+
+.contact-page {
+  min-height: 100vh;
+  padding: 120px 80px;
+  background: #05070d;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background Animation */
+.bg-animation {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bg-animation span {
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  background: #5f6fff;
+  opacity: 0.12;
+  filter: blur(120px);
+  border-radius: 50%;
+  animation: float 18s infinite ease-in-out;
+}
+
+.bg-animation span:nth-child(1) { top: 10%; left: 15%; }
+.bg-animation span:nth-child(2) { top: 65%; left: 70%; animation-delay: 6s; }
+.bg-animation span:nth-child(3) { top: 30%; left: 50%; animation-delay: 12s; }
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -30px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+}
+
+.jellyfish-lines {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.jellyfish-lines path {
+  fill: none;
+  stroke: #5f6fff;
+  stroke-width: 2;
+  opacity: 0.12;
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 1200;
+  animation: flowLines 14s linear infinite;
+}
+
+.jellyfish-lines path:nth-child(2) {
+  animation-delay: 4s;
+  opacity: 0.1;
+}
+
+@keyframes flowLines {
+  0% { stroke-dashoffset: 1200; transform: translateY(0); }
+  50% { stroke-dashoffset: 0; transform: translateY(-30px); }
+  100% { stroke-dashoffset: -1200; transform: translateY(0); }
+}
+
+.bubbles span {
+  position: absolute;
+  bottom: -50px;
+  width: 10px;
+  height: 10px;
+  background: #5f6fff;
+  border-radius: 50%;
+  opacity: 0.2;
+  animation: rise 12s infinite ease-in;
+}
+
+.bubbles span:nth-child(1) { left: 10%; animation-duration: 10s; }
+.bubbles span:nth-child(2) { left: 25%; animation-duration: 14s; }
+.bubbles span:nth-child(3) { left: 50%; animation-duration: 12s; }
+.bubbles span:nth-child(4) { left: 70%; animation-duration: 16s; }
+.bubbles span:nth-child(5) { left: 85%; animation-duration: 11s; }
+
+@keyframes rise {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  30% { opacity: 0.2; }
+  100% { transform: translateY(-900px) scale(1.5); opacity: 0; }
+}
+
+/* Contact Header */
+.contact-header {
+  text-align: center;
+  margin-bottom: 50px;
+  position: relative;
+  z-index: 5;
+}
+
+.contact-header h2 {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.contact-header .tagline {
+  opacity: 0.7;
+}
+
+/* Contact Section - Two Column Layout */
+.contact-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 5;
+}
+
+/* Left Side - Form */
+.contact-form-side {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.contact-heading {
+  font-size: 32px;
+  margin-bottom: 15px;
+}
+
+.contact-heading span {
+  color: #5f6fff;
+}
+
+.contact-subtext {
+  opacity: 0.7;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+/* Form Groups */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #5f6fff;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: white;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #5f6fff;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.form-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: white;
+  font-size: 14px;
+  min-height: 120px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.form-textarea:focus {
+  outline: none;
+  border-color: #5f6fff;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Success/Error Messages */
+.success-message {
+  background: rgba(40, 167, 69, 0.2);
+  border: 1px solid #28a745;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.success-message svg {
+  width: 20px;
+  height: 20px;
+  stroke: #28a745;
+}
+
+.error-message {
+  background: rgba(220, 53, 69, 0.2);
+  border: 1px solid #dc3545;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.error-message svg {
+  width: 20px;
+  height: 20px;
+  stroke: #dc3545;
+}
+
+/* Send Button */
+.send-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #5f6fff, #b06bff);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.send-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.send-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(95, 111, 255, 0.4);
+}
+
+.send-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Right Side - Contact Info */
+.contact-info-side {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.info-card {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+  transition: 0.3s;
+}
+
+.info-card:hover {
+  transform: translateX(5px);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.info-icon {
+  width: 50px;
+  height: 50px;
+  background: rgba(95, 111, 255, 0.2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.info-icon svg {
+  width: 24px;
+  height: 24px;
+  stroke: #5f6fff;
+}
+
+.info-card-title {
+  font-size: 14px;
+  opacity: 0.7;
+  margin-bottom: 5px;
+}
+
+.info-card-value {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.info-card-sub {
+  font-size: 12px;
+  opacity: 0.5;
+}
+
+.connect-title {
+  font-size: 20px;
+  margin: 30px 0 20px;
+  color: #5f6fff;
+}
+
+.social-links {
+  display: flex;
+  gap: 15px;
+}
+
+.social-btn {
+  width: 45px;
+  height: 45px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.social-btn svg {
+  width: 22px;
+  height: 22px;
+  stroke: white;
+}
+
+.social-btn:hover {
+  background: #5f6fff;
+  transform: translateY(-3px);
+}
+
+/* Privacy Banner */
+.privacy-banner {
+  max-width: 900px;
+  margin: 60px auto 0;
+  position: relative;
+  z-index: 5;
+}
+
+.privacy-inner {
+  background: rgba(95, 111, 255, 0.1);
+  border: 1px solid rgba(95, 111, 255, 0.3);
+  border-radius: 20px;
+  padding: 30px;
+}
+
+.privacy-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.privacy-title span {
+  font-size: 24px;
+}
+
+.privacy-text {
+  opacity: 0.7;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.privacy-text:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+  .contact-page {
+    padding: 100px 20px;
+  }
+  
+  .contact-section {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .contact-header h2 {
+    font-size: 36px;
+  }
+  
+  .contact-form-side,
+  .contact-info-side {
+    padding: 30px;
+  }
+  
+  .contact-heading {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .info-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .info-icon {
+    margin: 0 auto;
+  }
+  
+  .social-links {
+    justify-content: center;
+  }
+}

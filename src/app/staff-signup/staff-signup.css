@@ -1,0 +1,368 @@
+/* =========================
+   ROOT AUTH PAGE
+========================= */
+.auth {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  overflow: hidden;
+  background: #05070d;
+}
+
+/* =========================
+   BACKGROUND LAYER
+========================= */
+.bg-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* BACKGROUND IMAGE */
+.bg-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: url('/assets/background.png') center/cover no-repeat;
+  animation: slowZoom 25s linear infinite;
+}
+
+/* DARK OVERLAY */
+.bg-image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 7, 13, 0.65);
+}
+
+/* =========================
+   ANIMATION LAYER
+========================= */
+.bg-animation {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+
+  background: linear-gradient(
+    -45deg,
+    rgba(5,7,13,0.4),
+    rgba(10,15,44,0.3),
+    rgba(18,26,64,0.3),
+    rgba(5,7,13,0.4)
+  );
+
+  background-size: 400% 400%;
+  animation: gradientMove 15s ease infinite;
+}
+
+/* =========================
+   FLOATING BLOBS (FIXED)
+========================= */
+.bg-animation span {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, #5f6fff55, transparent 70%);
+  border-radius: 50%;
+  filter: blur(40px);
+  animation: floatBlob 10s ease-in-out infinite;
+}
+
+/* better positioning */
+.bg-animation span:nth-child(1) { top: 20%; left: 15%; }
+.bg-animation span:nth-child(2) { top: 60%; left: 70%; }
+.bg-animation span:nth-child(3) { top: 40%; left: 40%; }
+
+/* =========================
+   JELLYFISH LINES
+========================= */
+.jellyfish-lines {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.2;
+}
+
+.jellyfish-lines path {
+  fill: none;
+  stroke: #5f6fff;
+  stroke-width: 2;
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 1200;
+  animation: flowLines 14s linear infinite;
+}
+
+/* =========================
+   BUBBLES (FIXED RANDOMNESS)
+========================= */
+.bubbles span {
+  position: absolute;
+  bottom: -50px;
+  width: 10px;
+  height: 10px;
+  background: #5f6fff;
+  border-radius: 50%;
+  opacity: 0.2;
+  animation: rise 12s infinite ease-in;
+}
+
+/* random positions */
+.bubbles span:nth-child(1) { left: 10%; animation-duration: 10s; }
+.bubbles span:nth-child(2) { left: 30%; animation-duration: 14s; }
+.bubbles span:nth-child(3) { left: 50%; animation-duration: 12s; }
+.bubbles span:nth-child(4) { left: 70%; animation-duration: 16s; }
+.bubbles span:nth-child(5) { left: 90%; animation-duration: 11s; }
+
+/* =========================
+   GLOW EFFECT (FIXED)
+========================= */
+.glow {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, #7b6cff55, transparent 70%);
+  filter: blur(80px);
+  animation: float 6s ease-in-out infinite;
+  z-index: 1;
+}
+
+/* correct positioning */
+.right .glow:nth-of-type(1) {
+  top: 10%;
+  left: 10%;
+}
+
+.right .glow:nth-of-type(2) {
+  bottom: 10%;
+  right: 10%;
+}
+
+/* =========================
+   MAIN LAYOUT
+========================= */
+.auth-container {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* LEFT */
+.left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  padding: 40px;
+}
+
+.left-content h1 {
+  font-size: 52px;
+  margin-bottom: 10px;
+}
+
+.left-content p {
+  opacity: 0.7;
+}
+
+/* RIGHT */
+.right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  position: relative; /* IMPORTANT for glow positioning */
+}
+
+/* =========================
+   FORM CARD
+========================= */
+.form-card {
+  width: 420px;
+  padding: 40px;
+  border-radius: 25px;
+
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(25px);
+
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+
+  color: white;
+  z-index: 2;
+}
+
+/* INPUTS */
+.form-card input {
+  width: 100%;
+  padding: 14px;
+  margin-top: 12px;
+
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+
+  background: rgba(255,255,255,0.05);
+  color: white;
+
+  outline: none;
+}
+
+/* BUTTON */
+.form-card button {
+  width: 100%;
+  margin-top: 20px;
+  padding: 14px;
+
+  border-radius: 25px;
+  border: none;
+
+  background: linear-gradient(135deg, #5f6fff, #b06bff);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* ERROR TEXT */
+small {
+  color: #ff4d4d;
+  font-size: 12px;
+  margin-top: 5px;
+  display: block;
+}
+
+/* =========================
+   ANIMATIONS
+========================= */
+@keyframes slowZoom {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes rise {
+  0% { transform: translateY(0); opacity: 0; }
+  50% { opacity: 0.3; }
+  100% { transform: translateY(-100vh); opacity: 0; }
+}
+
+@keyframes flowLines {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+  100% { transform: translateY(0px); }
+}
+
+/* NEW: blob animation */
+@keyframes floatBlob {
+  0% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-30px) scale(1.1); }
+  100% { transform: translateY(0px) scale(1); }
+}
+/* Staff css */
+
+.staff-card {
+  border: 1px solid rgba(95, 111, 255, 0.3);
+  box-shadow: 0 10px 40px rgba(95, 111, 255, 0.15), 0 0 0 1px rgba(95,111,255,0.1);
+}
+
+.staff-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.lock-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.staff-subtitle {
+  opacity: 0.5;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.shield-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+}
+
+.staff-badge {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(95,111,255,0.4);
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.6);
+}
+
+.input-row {
+  display: flex;
+  gap: 12px;
+}
+
+.input-row .input-group {
+  flex: 1;
+}
+
+.code-field {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(95, 111, 255, 0.4);
+  background: rgba(95, 111, 255, 0.05);
+}
+
+.code-label {
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #5f6fff;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.code-input {
+  width: 100%;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(95,111,255,0.3) !important;
+  border-radius: 0 !important;
+  padding: 8px 0 !important;
+  margin-top: 0 !important;
+  letter-spacing: 4px;
+  font-size: 18px;
+}
+
+.staff-btn {
+  background: linear-gradient(135deg, #5f6fff, #b06bff) !important;
+  box-shadow: 0 4px 20px rgba(95, 111, 255, 0.4);
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 13px;
+  opacity: 0.6;
+}
+
+.login-link a {
+  color: #5f6fff;
+  text-decoration: none;
+}

@@ -1,0 +1,35 @@
+# ── Secrets ──────────────────────────
+*.env
+.env
+.env.*
+
+# ── Python AI Service ────────────────
+ai-service/.venv/
+ai-service/venv/
+ai-service/__pycache__/
+ai-service/*.pyc
+ai-service/*.pt
+*.log
+
+# ── Uploaded user files ──────────────
+cyber-intel/uploads/
+uploads/
+
+# ── Spring Boot ──────────────────────
+cyber-intel/target/
+cyber-intel/logs/
+
+# ── Angular ──────────────────────────
+NicasiaHoldings/node_modules/
+NicasiaHoldings/.angular/cache/
+NicasiaHoldings/dist/
+
+# ── Node (global fallback) ───────────
+node_modules/
+
+# ── IDE ──────────────────────────────
+.vscode/
+
+# ── System ───────────────────────────
+.DS_Store
+Thumbs.db

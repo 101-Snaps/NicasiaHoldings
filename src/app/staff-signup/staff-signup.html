@@ -1,0 +1,90 @@
+<section class="auth" #staffSignupSection>
+  <div class="bg-layer">
+    <div class="bg-image"></div>
+    <div class="bg-animation">
+      <span></span><span></span><span></span>
+      <svg class="jellyfish-lines" viewBox="0 0 1440 800" preserveAspectRatio="none">
+        <path d="M0,400 C300,300 600,500 900,400 C1200,300 1440,450 1440,450" />
+        <path d="M0,500 C400,600 800,300 1200,500 C1400,600 1440,550 1440,550" />
+      </svg>
+      <div class="bubbles">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-container">
+    <div class="left">
+      <div class="left-content">
+        <!-- Shield icon -->
+        <div class="shield-icon">🛡️</div>
+        <h1>Staff Portal</h1>
+        <p>Authorised personnel only</p>
+        <div class="staff-badge">NICASIA INTELLIGENCE SYSTEM</div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="glow"></div>
+      <div class="form-card staff-card">
+
+        <div class="staff-header">
+          <div class="lock-icon">🔐</div>
+          <h2>Staff Registration</h2>
+          <p class="staff-subtitle">A valid access code is required</p>
+        </div>
+
+        <form [formGroup]="staffForm" (ngSubmit)="onSubmit()">
+
+          <div class="input-row">
+            <div class="input-group">
+              <input type="text" placeholder="First Name" formControlName="name">
+              <small *ngIf="staffForm.get('name')?.invalid && staffForm.get('name')?.touched">Required</small>
+            </div>
+            <div class="input-group">
+              <input type="text" placeholder="Last Name" formControlName="surname">
+              <small *ngIf="staffForm.get('surname')?.invalid && staffForm.get('surname')?.touched">Required</small>
+            </div>
+          </div>
+
+          <input type="text" placeholder="Cell Number" formControlName="cell">
+          <small *ngIf="staffForm.get('cell')?.invalid && staffForm.get('cell')?.touched">
+            Valid phone number required
+          </small>
+
+          <input type="email" placeholder="Work Email" formControlName="email">
+          <small *ngIf="staffForm.get('email')?.invalid && staffForm.get('email')?.touched">
+            Valid email required
+          </small>
+
+          <input type="password" placeholder="Password" formControlName="password">
+          <small *ngIf="staffForm.get('password')?.invalid && staffForm.get('password')?.touched">
+            Min 6 characters
+          </small>
+
+          <!-- Staff code field — visually different -->
+          <div class="code-field">
+            <div class="code-label">Staff Access Code</div>
+            <input 
+              type="password" 
+              placeholder="Enter your staff code" 
+              formControlName="staffCode"
+              class="code-input">
+            <small *ngIf="staffForm.get('staffCode')?.invalid && staffForm.get('staffCode')?.touched">
+              Access code is required
+            </small>
+          </div>
+
+          <button type="submit" class="staff-btn" [disabled]="staffForm.invalid">
+            Register as Staff
+          </button>
+
+          <p class="login-link">
+            Already registered? <a routerLink="/login">Login here</a>
+          </p>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
