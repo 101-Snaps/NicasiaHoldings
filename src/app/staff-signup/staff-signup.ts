@@ -2,15 +2,13 @@ import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';  // ✅ import stays here
 import { UserService } from '../services/user.service';
-import { HttpClientModule } from '@angular/common/http';
-
-imports: [CommonModule, ReactiveFormsModule, RouterModule, HttpClientModule],
 
 @Component({
   selector: 'app-staff-signup',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, HttpClientModule],  // ✅ added inside decorator
   templateUrl: './staff-signup.html',
   styleUrls: ['./staff-signup.css']
 })
@@ -30,7 +28,6 @@ export class StaffSignupComponent {
   onSubmit(): void {
     if (this.staffForm.valid) {
       const payload = { ...this.staffForm.value, role: 'STAFF' };
-
       this.userService.register(payload).subscribe({
         next: () => {
           alert('Staff account created successfully! You can now login.');
