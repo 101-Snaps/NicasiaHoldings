@@ -3,6 +3,9 @@ import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angula
 import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../services/user.service';
+import { HttpClientModule } from '@angular/common/http';
+
+imports: [CommonModule, ReactiveFormsModule, RouterModule, HttpClientModule],
 
 @Component({
   selector: 'app-staff-signup',
