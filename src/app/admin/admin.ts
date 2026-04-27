@@ -143,15 +143,32 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
       this.unreadAlertCount = this.alerts.filter(a => a.status === 'UNREAD').length;
     });
   }
-  loadAiPredictions() {
+ loadAiPredictions(isRetry = false) {
+  if (!isRetry) {
+    this.aiLoading = true;
+    this.aiError   = false;
+  }
+
   return this.get<any[]>(`${this.aiApi}/predict`)
     .then(d => {
-      console.log("AI RESPONSE:", d);   // ✅ ADD THIS
       this.aiPredictions = d ?? [];
+      this.aiLoading     = false;
+      this.aiError       = false;
+      this.aiRetryCount  = 0;
     })
-    .catch((err) => {
-      console.error("AI ERROR:", err); // ✅ ADD THIS
-      this.aiPredictions = [];
+    .catch(err => {
+      console.error('AI service error:', err);
+      this.aiLoading = false;
+
+      // Auto-retry once after 8 seconds (handles Render cold-start wakeup)
+      if (this.aiRetryCount < 1) {
+        this.aiRetryCount++;
+        console.log(`AI cold-start detected — retrying in 8s (attempt ${this.aiRetryCount})...`);
+        setTimeout(() => this.loadAiPredictions(true), 8000);
+      } else {
+        this.aiError      = true;
+        this.aiPredictions = [];
+      }
     });
 }
 
