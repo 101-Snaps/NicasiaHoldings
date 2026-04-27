@@ -474,6 +474,26 @@
   text-align: center;
   backdrop-filter: blur(10px);
 }
+.ai-status {
+  padding: 1rem;
+  text-align: center;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.ai-status--error {
+  color: #e05c5c;
+}
+
+.ai-status--error button {
+  margin-left: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid #e05c5c;
+  background: transparent;
+  color: #e05c5c;
+  border-radius: 4px;
+  cursor: pointer;
+}
 
 .health-icon  { font-size: 28px; margin-bottom: 0.4rem; }
 .health-label { font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 4px; }
