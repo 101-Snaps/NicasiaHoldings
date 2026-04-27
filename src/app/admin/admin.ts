@@ -22,7 +22,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
   private secApi = `${environment.apiUrl}/security`;
   private incApi = `${environment.apiUrl}/incidents`;
   private thrApi = `${environment.apiUrl}/threats`;
-  private aiApi  = 'http://localhost:5000';
+  private aiApi  = 'https://ai-services-nkbg.onrender.com';
 
   private refreshInterval: any;
   private alertInterval:   any;
