@@ -22,7 +22,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
   private secApi = `${environment.apiUrl}/security`;
   private incApi = `${environment.apiUrl}/incidents`;
   private thrApi = `${environment.apiUrl}/threats`;
-  private aiApi  = 'https://ai-services-nkbg.onrender.com';
+  private aiApi  = 'https://ai-services-nkbg.onrender.com';   // ✅ Fix #1: correct deployed URL
 
   private refreshInterval: any;
   private alertInterval:   any;
@@ -51,6 +51,11 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
   incidentSearch     = '';
   threatSearch       = '';
   userSearch         = '';
+
+  // ── AI state ──────────────────────────────────────────────────────────  ✅ Fix #4: missing declarations
+  aiLoading          = false;
+  aiError            = false;
+  aiRetryCount       = 0;
 
   // ── Incident form ────────────────────────────────────────────────────
   showIncidentForm   = false;
@@ -137,40 +142,42 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
   loadIncidents()    { return this.get<any[]>(this.incApi).then(d => { this.incidents = d ?? []; this.updateCharts(); }); }
   loadThreats()      { return this.get<any[]>(this.thrApi).then(d => { this.threats = d ?? []; this.updateCharts(); }); }
   loadLogs()         { return this.get<any[]>(`${this.secApi}/logs`).then(d => { this.logs = d ?? []; }); }
-  loadAlerts()       {
+  loadAlerts() {
     return this.get<any[]>(`${this.secApi}/alerts`).then(d => {
       this.alerts = d ?? [];
       this.unreadAlertCount = this.alerts.filter(a => a.status === 'UNREAD').length;
     });
   }
- loadAiPredictions(isRetry = false) {
-  if (!isRetry) {
-    this.aiLoading = true;
-    this.aiError   = false;
+
+  // ✅ Fix #4: graceful loading + cold-start retry
+  loadAiPredictions(isRetry = false) {
+    if (!isRetry) {
+      this.aiLoading = true;
+      this.aiError   = false;
+    }
+
+    return this.get<any[]>(`${this.aiApi}/predict`)
+      .then(d => {
+        this.aiPredictions = d ?? [];
+        this.aiLoading     = false;
+        this.aiError       = false;
+        this.aiRetryCount  = 0;
+      })
+      .catch(err => {
+        console.error('AI service error:', err);
+        this.aiLoading = false;
+
+        // Auto-retry once after 8 seconds to handle Render free-tier cold-start
+        if (this.aiRetryCount < 1) {
+          this.aiRetryCount++;
+          console.log(`AI cold-start detected — retrying in 8s (attempt ${this.aiRetryCount})...`);
+          setTimeout(() => this.loadAiPredictions(true), 8000);
+        } else {
+          this.aiError       = true;
+          this.aiPredictions = [];
+        }
+      });
   }
-
-  return this.get<any[]>(`${this.aiApi}/predict`)
-    .then(d => {
-      this.aiPredictions = d ?? [];
-      this.aiLoading     = false;
-      this.aiError       = false;
-      this.aiRetryCount  = 0;
-    })
-    .catch(err => {
-      console.error('AI service error:', err);
-      this.aiLoading = false;
-
-      // Auto-retry once after 8 seconds (handles Render cold-start wakeup)
-      if (this.aiRetryCount < 1) {
-        this.aiRetryCount++;
-        console.log(`AI cold-start detected — retrying in 8s (attempt ${this.aiRetryCount})...`);
-        setTimeout(() => this.loadAiPredictions(true), 8000);
-      } else {
-        this.aiError      = true;
-        this.aiPredictions = [];
-      }
-    });
-}
 
   // ── Filtered views ────────────────────────────────────────────────────
 
