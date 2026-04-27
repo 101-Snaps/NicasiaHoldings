@@ -474,26 +474,6 @@
   text-align: center;
   backdrop-filter: blur(10px);
 }
-.ai-status {
-  padding: 1rem;
-  text-align: center;
-  color: #888;
-  font-size: 0.9rem;
-}
-
-.ai-status--error {
-  color: #e05c5c;
-}
-
-.ai-status--error button {
-  margin-left: 0.5rem;
-  padding: 0.25rem 0.75rem;
-  border: 1px solid #e05c5c;
-  background: transparent;
-  color: #e05c5c;
-  border-radius: 4px;
-  cursor: pointer;
-}
 
 .health-icon  { font-size: 28px; margin-bottom: 0.4rem; }
 .health-label { font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 4px; }
@@ -504,3 +484,37 @@
 .loading-overlay { text-align: center; padding: 4rem 1rem; color: rgba(255,255,255,0.5); }
 .spinner-big   { font-size: 40px; animation: spin 1s linear infinite; display: inline-block; }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── AI loading / error states ─────────────────────────────────────────── */
+.ai-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 3rem 1rem;
+  color: rgba(255,255,255,0.45);
+  font-size: 14px;
+}
+.ai-status .spinner-big {
+  font-size: 2rem;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.ai-status--error {
+  color: #f87171;
+}
+.ai-status--error button {
+  margin-top: 0.25rem;
+  padding: 0.4rem 1.25rem;
+  border: 1px solid #f87171;
+  background: transparent;
+  color: #f87171;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.2s;
+}
+.ai-status--error button:hover {
+  background: rgba(248,113,113,0.1);
+}
