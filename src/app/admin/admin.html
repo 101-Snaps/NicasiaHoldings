@@ -329,64 +329,50 @@
     </section>
 
     <!-- ── AI PREDICTIONS TAB ────────────────────────────────────────── -->
-   <section *ngIf="activeTab==='ai'" class="tab-content">
-  <div class="tab-toolbar">
-    <h2>AI Risk Predictions <span class="ai-badge">PyTorch</span></h2>
-    <button class="btn-ghost" (click)="loadAiPredictions()">↻ Refresh</button>
-  </div>
+    <section *ngIf="activeTab==='ai'" class="tab-content">
+      <div class="tab-toolbar">
+        <h2>AI Risk Predictions <span class="ai-badge">PyTorch</span></h2>
+        <button class="btn-ghost" (click)="loadAiPredictions()">↻ Refresh</button>
+      </div>
 
-  <!-- Loading state -->
-  <div *ngIf="aiLoading" class="ai-status">
-    <span class="spinner"></span> Loading AI predictions...
-  </div>
+      <!-- Loading state -->
+      <div class="ai-status" *ngIf="aiLoading">
+        <div class="spinner-big">⟳</div>
+        <p>Loading AI predictions{{ aiRetryCount > 0 ? ' (retrying after cold start…)' : '…' }}</p>
+      </div>
 
-  <!-- Error / offline state -->
-  <div *ngIf="aiError && !aiLoading" class="ai-status ai-status--error">
-    ⚠️ AI service is offline.
-    <button (click)="loadAiPredictions()">Retry</button>
-  </div>
+      <!-- Error state -->
+      <div class="ai-status ai-status--error" *ngIf="aiError && !aiLoading">
+        <p>⚠️ AI service is offline or unreachable.</p>
+        <button class="btn-primary" (click)="loadAiPredictions()">↻ Retry</button>
+      </div>
 
-  <!-- Results -->
-  <div *ngIf="!aiLoading && !aiError">
-
-    <div class="ai-grid" *ngIf="aiPredictions.length > 0">
-      <div class="ai-card" *ngFor="let p of aiPredictions">
-        <div class="ai-card-header">
-          <span class="badge" [ngClass]="severityClass(p.predictedSeverity)">
-            {{ p.predictedSeverity }}
-          </span>
-          <span class="ai-confidence">
-            {{ (p.confidence * 100).toFixed(0) }}% confidence
-          </span>
-        </div>
-
-        <h4>{{ p.title }}</h4>
-
-        <div class="risk-bar-wrap">
-          <div class="risk-bar"
-               [style.width.%]="p.riskScore"
-               [class.bar-low]="p.riskScore < 40"
-               [class.bar-med]="p.riskScore >= 40 && p.riskScore < 70"
-               [class.bar-high]="p.riskScore >= 70">
+      <div class="ai-grid" *ngIf="!aiLoading && !aiError && aiPredictions.length > 0">
+        <div class="ai-card" *ngFor="let p of aiPredictions">
+          <div class="ai-card-header">
+            <span class="badge" [ngClass]="severityClass(p.predictedSeverity)">{{ p.predictedSeverity }}</span>
+            <span class="ai-confidence">{{ (p.confidence * 100).toFixed(0) }}% confidence</span>
           </div>
-          <span class="risk-score">{{ p.riskScore }}</span>
-        </div>
-
-        <p class="ai-recommendation">💡 {{ p.recommendation }}</p>
-
-        <div class="severity-match" *ngIf="!p.severityMatch">
-          ⚠️ AI prediction differs from recorded severity
+          <h4>{{ p.title }}</h4>
+          <div class="risk-bar-wrap">
+            <div class="risk-bar" [style.width.%]="p.riskScore"
+                 [class.bar-low]="p.riskScore < 40"
+                 [class.bar-med]="p.riskScore >= 40 && p.riskScore < 70"
+                 [class.bar-high]="p.riskScore >= 70"></div>
+            <span class="risk-score">{{ p.riskScore }}</span>
+          </div>
+          <p class="ai-recommendation">💡 {{ p.recommendation }}</p>
+          <div class="severity-match" *ngIf="!p.severityMatch">
+            ⚠️ AI prediction differs from recorded severity
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="empty-state" *ngIf="aiPredictions.length === 0">
-      <p>🤖 No predictions available. Make sure the AI service is running on port 5000.</p>
-      <button class="btn-primary" (click)="loadAiPredictions()">Retry</button>
-    </div>
-
-  </div>
-</section>
+      <div class="empty-state" *ngIf="aiPredictions.length === 0">
+        <p>🤖 No predictions available. AI service is temporarily offline. It will retry automatically.</p>
+        <button class="btn-primary" (click)="loadAiPredictions()">Retry</button>
+      </div>
+    </section>
 
     <!-- ── USERS TAB ─────────────────────────────────────────────────── -->
     <section *ngIf="activeTab==='users'" class="tab-content">
