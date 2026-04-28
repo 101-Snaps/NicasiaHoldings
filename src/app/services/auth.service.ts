@@ -53,12 +53,12 @@ export class AuthService {
   // ── API calls ────────────────────────────────────────────────────────
 
   login(payload: { email: string; password: string; selectedRole: string }) {
-   return this.http.post<any>(`${environment.apiUrl}/api/auth/login`, payload);
+   return this.http.post<any>(`${environment.apiUrl}/auth/login`, payload);
   }
 
   // FIX: Added register() here so signup.ts can use AuthService
   // as the single source of truth for all auth-related HTTP calls.
   register(payload: any) {
-   return this.http.post<any>(`${environment.apiUrl}/api/auth/register`, payload); 
+   return this.http.post<any>(`${environment.apiUrl}/auth/register`, payload); 
   }
 }
