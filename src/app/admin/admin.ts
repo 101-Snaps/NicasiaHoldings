@@ -22,7 +22,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
   private secApi = `${environment.apiUrl}/security`;
   private incApi = `${environment.apiUrl}/incidents`;
   private thrApi = `${environment.apiUrl}/threats`;
-  private aiApi  = 'https://ai-services-nkbg.onrender.com';   // ✅ Fix #1: correct deployed URL
+  private aiApi  = 'https://ai-services-nkbg.onrender.com';
 
   private refreshInterval: any;
   private alertInterval:   any;
@@ -52,7 +52,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
   threatSearch       = '';
   userSearch         = '';
 
-  // ── AI state ──────────────────────────────────────────────────────────  ✅ Fix #4: missing declarations
+  // ── AI state ─────────────────────────────────────────────────────────
   aiLoading          = false;
   aiError            = false;
   aiRetryCount       = 0;
@@ -98,7 +98,8 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loadAll();
     this.refreshInterval = setInterval(() => {
       this.loadStats(); this.loadHealth();
-      this.loadIncidents(); this.loadThreats();
+      this.loadIncidents();
+      this.loadThreats().then(() => this.loadAiPredictions());
       this.lastRefreshed = new Date();
     }, 15000);
     this.alertInterval = setInterval(() => this.loadAlerts(), 8000);
@@ -124,10 +125,9 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
       this.loadUsers(),
       this.loadApplications(),
       this.loadIncidents(),
-      this.loadThreats(),
+      this.loadThreats().then(() => this.loadAiPredictions()), // AI runs after threats are loaded
       this.loadLogs(),
-      this.loadAlerts(),
-      this.loadAiPredictions()
+      this.loadAlerts()
     ]).finally(() => { this.isLoading = false; });
   }
 
@@ -149,16 +149,39 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  // ✅ Fix #4: graceful loading + cold-start retry
+  // ── AI Predictions ────────────────────────────────────────────────────
+  // Posts each threat individually to /predict-threat with { category, source, frequency }
+  // and merges the result back by threatId so the template can look up predictions.
+
   loadAiPredictions(isRetry = false) {
     if (!isRetry) {
       this.aiLoading = true;
       this.aiError   = false;
     }
 
-    return this.get<any[]>(`${this.aiApi}/predict`)
-      .then(d => {
-        this.aiPredictions = d ?? [];
+    if (this.threats.length === 0) {
+      this.aiLoading = false;
+      return Promise.resolve();
+    }
+
+    const requests = this.threats.map(threat =>
+      this.http.post<any>(`${this.aiApi}/predict-threat`, {
+        category:  threat.category,
+        source:    threat.source   ?? 'Unknown',
+        frequency: threat.frequency ?? 1
+      }).toPromise()
+        .then(result => ({
+          threatId:   threat.id,
+          threatName: threat.name,
+          riskLevel:  result?.riskLevel,
+          confidence: result?.confidence
+        }))
+        .catch(() => null) // individual failure won't break the whole batch
+    );
+
+    return Promise.all(requests)
+      .then(results => {
+        this.aiPredictions = results.filter(r => r !== null);
         this.aiLoading     = false;
         this.aiError       = false;
         this.aiRetryCount  = 0;
@@ -167,7 +190,6 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
         console.error('AI service error:', err);
         this.aiLoading = false;
 
-        // Auto-retry once after 8 seconds to handle Render free-tier cold-start
         if (this.aiRetryCount < 1) {
           this.aiRetryCount++;
           console.log(`AI cold-start detected — retrying in 8s (attempt ${this.aiRetryCount})...`);
@@ -177,6 +199,12 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
           this.aiPredictions = [];
         }
       });
+  }
+
+  // Helper: look up a prediction for a given threat id in the template
+  // Usage: {{ getPrediction(threat.id)?.riskLevel }}
+  getPrediction(threatId: number) {
+    return this.aiPredictions.find(p => p.threatId === threatId) ?? null;
   }
 
   // ── Filtered views ────────────────────────────────────────────────────
@@ -357,7 +385,10 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
       : this.http.post(this.thrApi, body);
 
     req.subscribe({
-      next: () => { this.showThreatForm = false; this.loadThreats(); },
+      next: () => {
+        this.showThreatForm = false;
+        this.loadThreats().then(() => this.loadAiPredictions()); // refresh AI predictions after save
+      },
       error: (e) => alert(e.error?.message || 'Save failed')
     });
   }
@@ -365,7 +396,7 @@ export class AdminComponent implements OnInit, OnDestroy, AfterViewInit {
   deleteThreat(id: number) {
     if (!confirm('Delete this threat?')) return;
     this.http.delete(`${this.thrApi}/${id}`).subscribe({
-      next: () => this.loadThreats(),
+      next: () => this.loadThreats().then(() => this.loadAiPredictions()),
       error: (e) => alert(e.error?.message || 'Delete failed')
     });
   }
