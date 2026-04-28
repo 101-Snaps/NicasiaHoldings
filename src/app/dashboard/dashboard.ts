@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-dashboard',
@@ -28,7 +29,7 @@ export class DashboardComponent implements OnInit {
   // =========================
   // 🔹 STATS (NEW)
   // =========================
-  api = 'YOUR_API_URL';
+  api = environment.apiUrl;
 
   appCount: number | null = null;
   savedCount: number | null = null;
